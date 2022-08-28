@@ -1,6 +1,6 @@
 name: 'Create Blog from Markdown Files'
-description: 'This action allows you to create a blog from your markdown files and deploy to GitHub pages'
-author: 'Kamran Ahmed <kamranahmed.se@gmail.com>'
+description: 'This action allows you to create a blog from your markdown files and deploy to GitHub pages (based on: Kamran Ahmed <kamranahmed.se@gmail.com>)'
+author: 'dplantera'
 runs:
   using: 'node16'
   main: 'dist/index.js'
