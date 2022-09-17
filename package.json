@@ -1,13 +1,13 @@
 {
   "name": "@kamranahmedse/github-pages-blog-action",
-  "version": "0.0.10",
+  "version": "0.1.2",
   "description": "Create good looking blog from your markdown files in a GitHub repository\n\n",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
     "dev:serve": "ts-node ./generate.ts && serve out",
-    "format": "prettier --write '**/*.ts'",
-    "format-check": "prettier --check '**/*.ts'",
+    "format": "prettier --write ./**/*.ts",
+    "format-check": "prettier --check ./**/*.ts",
     "lint": "eslint src/**/*.ts",
     "package": "ncc build --source-map --license licenses.txt",
     "test": "jest",
@@ -36,7 +36,6 @@
     "fs-extra": "^10.1.0",
     "showdown": "^2.1.0",
     "showdown-footnotes": "^2.1.2",
-    "showdown-table": "^1.0.1",
     "slugify": "^1.6.5"
   },
   "devDependencies": {

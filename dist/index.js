@@ -198,7 +198,7 @@ const outputDir = path_1.default.join(repoPath, 'output');
     repoUrl: `https://x-access-token:${token}@${hostname}/${repositoryName}.git`,
     outputDir: outputDir,
     branch,
-    themeDir: path_1.default.join(__dirname, '../theme')
+    themeDir: path_1.default.join(__dirname, './theme')
 });
 
 
