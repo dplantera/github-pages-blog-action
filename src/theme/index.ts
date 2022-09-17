@@ -5,7 +5,7 @@ import fm, { FrontMatterResult } from 'front-matter';
 import path from 'path';
 import fsExtra from 'fs-extra';
 import fs from 'fs';
-import { info } from '@actions/core';
+import { debug, info } from "@actions/core";
 import { ConfigurationType } from '../git';
 import { htmlConverter } from './markdown-to-html';
 
@@ -52,16 +52,16 @@ export type SiteConfigType = {
 };
 
 export async function prepareTheme(
-  configuration: Pick<ConfigurationType, 'repoPath' | 'outputDir'> & { siteConfig?: SiteConfigType }
+  configuration: Pick<ConfigurationType, 'repoPath' | 'outputDir' | 'themeDir'> & { siteConfig?: SiteConfigType }
 ) {
   info("Prepare Theme")
-  const { outputDir, repoPath, siteConfig: _siteConfig } = configuration;
+  const { outputDir, repoPath, themeDir: themePath, siteConfig: _siteConfig } = configuration;
   const postsDir = path.join(repoPath, './posts');
-  const themePath = path.join(process.cwd(), 'theme');
-  info(`- __dirname: ${__dirname}`)
-  info(`- cwd: ${process.cwd()}`)
-  info(`- postsDir: ${postsDir}`)
-  info(`- themePath: ${themePath}`)
+
+  debug(`- __dirname: ${__dirname}`)
+  debug(`- cwd: ${process.cwd()}`)
+  debug(`- postsDir: ${postsDir}`)
+  debug(`- themePath: ${themePath}`)
 
   const siteConfig: SiteConfigType =
     _siteConfig ?? require(path.join(configuration.repoPath, './site.json'));

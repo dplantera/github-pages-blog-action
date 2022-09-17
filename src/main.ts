@@ -1,4 +1,4 @@
-import { getInput } from '@actions/core';
+import { getInput, info, } from "@actions/core";
 import { run } from './runner';
 import path from 'path';
 import * as github from '@actions/github';
@@ -12,7 +12,11 @@ const repositoryName = repository?.full_name || process.env.GITHUB_REPOSITORY ||
 const repoPath = process.env.GITHUB_WORKSPACE || path.join(__dirname, '../');
 const outputDir = path.join(repoPath, 'output');
 
-run({
+// this dir is in the repository of the action not the root of the project which will run the action
+info(`GITHUB_ACTION_PATH: ${process.env.GITHUB_ACTION_PATH}`)
+const themeDir = path.join(process.env.GITHUB_ACTION_PATH || __dirname, '../theme')
+
+  run({
   token,
   pusherName: pusher?.name || process.env.GITHUB_PUSHER_NAME,
   pusherEmail: pusher?.email || process.env.GITHUB_PUSHER_EMAIL,
@@ -22,5 +26,5 @@ run({
   repoUrl: `https://x-access-token:${token}@${hostname}/${repositoryName}.git`,
   outputDir: outputDir,
   branch,
-  themeDir: path.join(__dirname, '../theme')
-});
+  themeDir
+}).then(() => info("done running"));

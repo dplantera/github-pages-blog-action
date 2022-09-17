@@ -188,6 +188,9 @@ const hostname = 'github.com';
 const repositoryName = (repository === null || repository === void 0 ? void 0 : repository.full_name) || process.env.GITHUB_REPOSITORY || '';
 const repoPath = process.env.GITHUB_WORKSPACE || path_1.default.join(__dirname, '../');
 const outputDir = path_1.default.join(repoPath, 'output');
+// this dir is in the repository of the action not the root of the project which will run the action
+(0, core_1.info)(`GITHUB_ACTION_PATH: ${process.env.GITHUB_ACTION_PATH}`);
+const themeDir = path_1.default.join(process.env.GITHUB_ACTION_PATH || __dirname, '../theme');
 (0, runner_1.run)({
     token,
     pusherName: (pusher === null || pusher === void 0 ? void 0 : pusher.name) || process.env.GITHUB_PUSHER_NAME,
@@ -198,8 +201,8 @@ const outputDir = path_1.default.join(repoPath, 'output');
     repoUrl: `https://x-access-token:${token}@${hostname}/${repositoryName}.git`,
     outputDir: outputDir,
     branch,
-    themeDir: path_1.default.join(__dirname, '../theme')
-});
+    themeDir
+}).then(() => (0, core_1.info)("done running"));
 
 
 /***/ }),
@@ -273,13 +276,12 @@ const markdown_to_html_1 = __nccwpck_require__(1531);
 function prepareTheme(configuration) {
     return __awaiter(this, void 0, void 0, function* () {
         (0, core_1.info)("Prepare Theme");
-        const { outputDir, repoPath, siteConfig: _siteConfig } = configuration;
+        const { outputDir, repoPath, themeDir: themePath, siteConfig: _siteConfig } = configuration;
         const postsDir = path_1.default.join(repoPath, './posts');
-        const themePath = path_1.default.join(process.cwd(), 'theme');
-        (0, core_1.info)(`- __dirname: ${__dirname}`);
-        (0, core_1.info)(`- cwd: ${process.cwd()}`);
-        (0, core_1.info)(`- postsDir: ${postsDir}`);
-        (0, core_1.info)(`- themePath: ${themePath}`);
+        (0, core_1.debug)(`- __dirname: ${__dirname}`);
+        (0, core_1.debug)(`- cwd: ${process.cwd()}`);
+        (0, core_1.debug)(`- postsDir: ${postsDir}`);
+        (0, core_1.debug)(`- themePath: ${themePath}`);
         const siteConfig = _siteConfig !== null && _siteConfig !== void 0 ? _siteConfig : require(path_1.default.join(configuration.repoPath, './site.json'));
         // Remove and recreate the output directory
         fs_extra_1.default.removeSync(configuration.outputDir);
