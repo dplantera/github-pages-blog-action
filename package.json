@@ -5,11 +5,12 @@
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
-    "dev:serve": "ts-node ./generate.ts && serve out",
+    "dev:serve": "npm run clean && ts-node ./generate.ts && serve out",
     "format": "prettier --write ./**/*.ts",
     "format-check": "prettier --check ./**/*.ts",
     "lint": "eslint src/**/*.ts",
     "package": "ncc build --source-map --license licenses.txt",
+    "clean": "rimraf src/**/*.js src/*.js src/**/*.js.map src/*.js.map lib",
     "test": "jest",
     "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
   },

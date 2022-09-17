@@ -6,6 +6,7 @@ export type ConfigurationType = {
   pusherName: string;
   pusherEmail: string;
   repoUrl: string;
+  repoName: string;
   token: string;
   repositoryName: string;
   hostname: string;

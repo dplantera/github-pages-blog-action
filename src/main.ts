@@ -1,4 +1,4 @@
-import { getInput, info, } from "@actions/core";
+import { getInput, info } from '@actions/core';
 import { run } from './runner';
 import path from 'path';
 import * as github from '@actions/github';
@@ -8,23 +8,25 @@ const { pusher, repository } = github.context.payload;
 const token = getInput('token') || process.env.GITHUB_TOKEN || '';
 const branch = getInput('branch') || 'gh-pages';
 const hostname = 'github.com';
-const repositoryName = repository?.full_name || process.env.GITHUB_REPOSITORY || '';
+const repositoryNameFull = repository?.full_name || process.env.GITHUB_REPOSITORY || '';
 const repoPath = process.env.GITHUB_WORKSPACE || path.join(__dirname, '../');
 const outputDir = path.join(repoPath, 'output');
 
+// in GitHub we need to prefix all refs with the repo name without the owner
+const repoName = path.basename(repositoryNameFull);
 // this dir is in the repository of the action not the root of the project which will run the action
-info(`GITHUB_ACTION_PATH: ${process.env.GITHUB_ACTION_PATH}`)
-const themeDir = path.join(process.env.GITHUB_ACTION_PATH || __dirname, '../theme')
+const themeDir = path.join(__dirname, '../theme');
 
-  run({
+run({
   token,
   pusherName: pusher?.name || process.env.GITHUB_PUSHER_NAME,
   pusherEmail: pusher?.email || process.env.GITHUB_PUSHER_EMAIL,
-  repositoryName,
+  repositoryName: repositoryNameFull,
   hostname,
   repoPath: repoPath,
-  repoUrl: `https://x-access-token:${token}@${hostname}/${repositoryName}.git`,
+  repoName,
+  repoUrl: `https://x-access-token:${token}@${hostname}/${repositoryNameFull}.git`,
   outputDir: outputDir,
   branch,
   themeDir
-}).then(() => info("done running"));
+}).then(() => info('done running action'));

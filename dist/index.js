@@ -185,24 +185,26 @@ const { pusher, repository } = github.context.payload;
 const token = (0, core_1.getInput)('token') || process.env.GITHUB_TOKEN || '';
 const branch = (0, core_1.getInput)('branch') || 'gh-pages';
 const hostname = 'github.com';
-const repositoryName = (repository === null || repository === void 0 ? void 0 : repository.full_name) || process.env.GITHUB_REPOSITORY || '';
+const repositoryNameFull = (repository === null || repository === void 0 ? void 0 : repository.full_name) || process.env.GITHUB_REPOSITORY || '';
 const repoPath = process.env.GITHUB_WORKSPACE || path_1.default.join(__dirname, '../');
 const outputDir = path_1.default.join(repoPath, 'output');
+// in GitHub we need to prefix all refs with the repo name without the owner
+const repoName = path_1.default.basename(repositoryNameFull);
 // this dir is in the repository of the action not the root of the project which will run the action
-(0, core_1.info)(`GITHUB_ACTION_PATH: ${process.env.GITHUB_ACTION_PATH}`);
-const themeDir = path_1.default.join(process.env.GITHUB_ACTION_PATH || __dirname, '../theme');
+const themeDir = path_1.default.join(__dirname, '../theme');
 (0, runner_1.run)({
     token,
     pusherName: (pusher === null || pusher === void 0 ? void 0 : pusher.name) || process.env.GITHUB_PUSHER_NAME,
     pusherEmail: (pusher === null || pusher === void 0 ? void 0 : pusher.email) || process.env.GITHUB_PUSHER_EMAIL,
-    repositoryName,
+    repositoryName: repositoryNameFull,
     hostname,
     repoPath: repoPath,
-    repoUrl: `https://x-access-token:${token}@${hostname}/${repositoryName}.git`,
+    repoName,
+    repoUrl: `https://x-access-token:${token}@${hostname}/${repositoryNameFull}.git`,
     outputDir: outputDir,
     branch,
     themeDir
-}).then(() => (0, core_1.info)("done running"));
+}).then(() => (0, core_1.info)('done running action'));
 
 
 /***/ }),
@@ -246,6 +248,36 @@ exports.run = run;
 /***/ }),
 
 /***/ 1595:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.prepareTheme = void 0;
+var prepare_theme_1 = __nccwpck_require__(3107);
+Object.defineProperty(exports, "prepareTheme", ({ enumerable: true, get: function () { return prepare_theme_1.prepareTheme; } }));
+
+
+/***/ }),
+
+/***/ 1531:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.htmlConverter = void 0;
+const showdown_1 = __importDefault(__nccwpck_require__(1872));
+const footnotes = __nccwpck_require__(802);
+exports.htmlConverter = new showdown_1.default.Converter({ extensions: [footnotes], tables: true });
+
+
+/***/ }),
+
+/***/ 3107:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -275,7 +307,7 @@ const core_1 = __nccwpck_require__(2186);
 const markdown_to_html_1 = __nccwpck_require__(1531);
 function prepareTheme(configuration) {
     return __awaiter(this, void 0, void 0, function* () {
-        (0, core_1.info)("Prepare Theme");
+        (0, core_1.info)('Prepare Theme');
         const { outputDir, repoPath, themeDir: themePath, siteConfig: _siteConfig } = configuration;
         const postsDir = path_1.default.join(repoPath, './posts');
         (0, core_1.debug)(`- __dirname: ${__dirname}`);
@@ -298,8 +330,6 @@ exports.prepareTheme = prepareTheme;
 function prepareThemeFiles({ themePath, outputDir, siteConfig }) {
     return __awaiter(this, void 0, void 0, function* () {
         (0, core_1.info)('Preparing theme files');
-        (0, core_1.info)(`- themePath: ${themePath}`);
-        (0, core_1.info)(`- outputDir: ${outputDir}`);
         const nonPageFiles = fs_1.default
             .readdirSync(themePath)
             .filter(file => !file.endsWith('.ejs') && !file.startsWith('_'));
@@ -342,7 +372,7 @@ function prepareBlogPosts({ themePath, outputDir, siteConfig, postsDir }) {
             const postMeta = {
                 title,
                 date,
-                permalink: path_1.default.join('/', nestedPostDir, fileName),
+                permalink: path_1.default.join('/', siteConfig.repoName, nestedPostDir, fileName),
                 externalUrl,
                 html: postHtml
             };
@@ -399,23 +429,6 @@ function copyStaticAssets({ outputDir, repoPath }) {
         fs_extra_1.default.copySync(staticAssetsPath, outputDir);
     });
 }
-
-
-/***/ }),
-
-/***/ 1531:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.htmlConverter = void 0;
-const showdown_1 = __importDefault(__nccwpck_require__(1872));
-const footnotes = __nccwpck_require__(802);
-exports.htmlConverter = new showdown_1.default.Converter({ extensions: [footnotes], tables: true });
 
 
 /***/ }),
