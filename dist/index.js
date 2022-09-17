@@ -275,8 +275,9 @@ function prepareTheme(configuration) {
         (0, core_1.info)("Prepare Theme");
         const { outputDir, repoPath, siteConfig: _siteConfig } = configuration;
         const postsDir = path_1.default.join(repoPath, './posts');
-        const themePath = path_1.default.join(__dirname, '../../theme');
+        const themePath = path_1.default.join(process.cwd(), 'theme');
         (0, core_1.info)(`- __dirname: ${__dirname}`);
+        (0, core_1.info)(`- cwd: ${process.cwd()}`);
         (0, core_1.info)(`- postsDir: ${postsDir}`);
         (0, core_1.info)(`- themePath: ${themePath}`);
         const siteConfig = _siteConfig !== null && _siteConfig !== void 0 ? _siteConfig : require(path_1.default.join(configuration.repoPath, './site.json'));

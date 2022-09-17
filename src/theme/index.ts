@@ -57,8 +57,9 @@ export async function prepareTheme(
   info("Prepare Theme")
   const { outputDir, repoPath, siteConfig: _siteConfig } = configuration;
   const postsDir = path.join(repoPath, './posts');
-  const themePath = path.join(__dirname, '../../theme');
+  const themePath = path.join(process.cwd(), 'theme');
   info(`- __dirname: ${__dirname}`)
+  info(`- cwd: ${process.cwd()}`)
   info(`- postsDir: ${postsDir}`)
   info(`- themePath: ${themePath}`)
 
