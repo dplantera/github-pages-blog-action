@@ -11,12 +11,18 @@ import { htmlConverter } from './markdown-to-html';
 import { FrontMatterType, PostType, SiteConfigType } from './types';
 
 export async function prepareTheme(
-  configuration: Pick<ConfigurationType, 'repoPath' | 'outputDir' | 'themeDir'> & {
+  configuration: Pick<ConfigurationType, 'repoPath' | 'outputDir' | 'themeDir' | 'repoName'> & {
     siteConfig?: SiteConfigType;
   }
 ) {
   info('Prepare Theme');
-  const { outputDir, repoPath, themeDir: themePath, siteConfig: _siteConfig } = configuration;
+  const {
+    outputDir,
+    repoPath,
+    repoName: _repoName,
+    themeDir: themePath,
+    siteConfig: _siteConfig
+  } = configuration;
   const postsDir = path.join(repoPath, './posts');
 
   debug(`- __dirname: ${__dirname}`);
@@ -24,8 +30,11 @@ export async function prepareTheme(
   debug(`- postsDir: ${postsDir}`);
   debug(`- themePath: ${themePath}`);
 
+  // either we provide a site config or it will be loaded from the target route
   const siteConfig: SiteConfigType =
     _siteConfig ?? require(path.join(configuration.repoPath, './site.json'));
+  // the repoName can be calculated, but it may be overwritten by the consumer
+  siteConfig.repoName = siteConfig.repoName ?? _repoName;
 
   // Remove and recreate the output directory
   fsExtra.removeSync(configuration.outputDir);
