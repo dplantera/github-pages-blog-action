@@ -1,4 +1,4 @@
-import { getInput, info } from '@actions/core';
+import { debug, getInput, info } from "@actions/core";
 import { run } from './runner';
 import path from 'path';
 import * as github from '@actions/github';
@@ -16,6 +16,12 @@ const outputDir = path.join(repoPath, 'output');
 const repoName = path.basename(repositoryNameFull);
 // this dir is in the repository of the action not the root of the project which will run the action
 const themeDir = path.join(__dirname, '../theme');
+
+debug(`hostname: ${hostname}`);
+debug(`repositoryNameFull: ${repositoryNameFull}`);
+debug(`repoPath: ${repoPath}`);
+debug(`outputDir: ${outputDir}`);
+debug(`GITHUB_WORKSPACE: ${process.env.GITHUB_WORKSPACE}`);
 
 run({
   token,

@@ -192,6 +192,11 @@ const outputDir = path_1.default.join(repoPath, 'output');
 const repoName = path_1.default.basename(repositoryNameFull);
 // this dir is in the repository of the action not the root of the project which will run the action
 const themeDir = path_1.default.join(__dirname, '../theme');
+(0, core_1.debug)(`hostname: ${hostname}`);
+(0, core_1.debug)(`repositoryNameFull: ${repositoryNameFull}`);
+(0, core_1.debug)(`repoPath: ${repoPath}`);
+(0, core_1.debug)(`outputDir: ${outputDir}`);
+(0, core_1.debug)(`GITHUB_WORKSPACE: ${process.env.GITHUB_WORKSPACE}`);
 (0, runner_1.run)({
     token,
     pusherName: (pusher === null || pusher === void 0 ? void 0 : pusher.name) || process.env.GITHUB_PUSHER_NAME,
