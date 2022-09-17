@@ -198,7 +198,7 @@ const outputDir = path_1.default.join(repoPath, 'output');
     repoUrl: `https://x-access-token:${token}@${hostname}/${repositoryName}.git`,
     outputDir: outputDir,
     branch,
-    themeDir: path_1.default.join(__dirname, './theme')
+    themeDir: path_1.default.join(__dirname, '../theme')
 });
 
 
@@ -272,10 +272,14 @@ const core_1 = __nccwpck_require__(2186);
 const markdown_to_html_1 = __nccwpck_require__(1531);
 function prepareTheme(configuration) {
     return __awaiter(this, void 0, void 0, function* () {
+        (0, core_1.info)("Prepare Theme");
         const { outputDir, repoPath, siteConfig: _siteConfig } = configuration;
-        const postsDir = path_1.default.join(repoPath, "./posts");
-        const themePath = path_1.default.join(__dirname, "../../theme");
-        const siteConfig = _siteConfig !== null && _siteConfig !== void 0 ? _siteConfig : require(path_1.default.join(configuration.repoPath, "./site.json"));
+        const postsDir = path_1.default.join(repoPath, './posts');
+        const themePath = path_1.default.join(__dirname, '../../theme');
+        (0, core_1.info)(`- __dirname: ${__dirname}`);
+        (0, core_1.info)(`- postsDir: ${postsDir}`);
+        (0, core_1.info)(`- themePath: ${themePath}`);
+        const siteConfig = _siteConfig !== null && _siteConfig !== void 0 ? _siteConfig : require(path_1.default.join(configuration.repoPath, './site.json'));
         // Remove and recreate the output directory
         fs_extra_1.default.removeSync(configuration.outputDir);
         fs_extra_1.default.ensureDirSync(configuration.outputDir);
@@ -290,54 +294,56 @@ function prepareTheme(configuration) {
 exports.prepareTheme = prepareTheme;
 function prepareThemeFiles({ themePath, outputDir, siteConfig }) {
     return __awaiter(this, void 0, void 0, function* () {
-        (0, core_1.info)("Preparing theme files");
+        (0, core_1.info)('Preparing theme files');
+        (0, core_1.info)(`- themePath: ${themePath}`);
+        (0, core_1.info)(`- outputDir: ${outputDir}`);
         const nonPageFiles = fs_1.default
             .readdirSync(themePath)
-            .filter(file => !file.endsWith(".ejs") && !file.startsWith("_"));
+            .filter(file => !file.endsWith('.ejs') && !file.startsWith('_'));
         nonPageFiles.forEach(nonPageFileName => {
             const nonPageFilePath = path_1.default.join(themePath, nonPageFileName);
             const outputPath = path_1.default.join(outputDir, nonPageFileName);
             fs_extra_1.default.copySync(nonPageFilePath, outputPath);
         });
         if (siteConfig.cname) {
-            fs_1.default.writeFileSync(path_1.default.join(outputDir, "CNAME"), siteConfig.cname);
+            fs_1.default.writeFileSync(path_1.default.join(outputDir, 'CNAME'), siteConfig.cname);
         }
         // Create the file to bypass jekyll execution by github pages
-        fs_1.default.writeFileSync(path_1.default.join(outputDir, ".nojekyll"), "");
+        fs_1.default.writeFileSync(path_1.default.join(outputDir, '.nojekyll'), '');
     });
 }
 function prepareBlogPosts({ themePath, outputDir, siteConfig, postsDir }) {
     return __awaiter(this, void 0, void 0, function* () {
-        (0, core_1.info)("Preparing blog posts");
+        (0, core_1.info)('Preparing blog posts');
         const postFiles = fs_1.default.readdirSync(postsDir);
         const posts = [];
         for (let contentFile of postFiles) {
             const contentFilePath = path_1.default.join(postsDir, contentFile);
-            const content = fs_1.default.readFileSync(contentFilePath, "utf-8");
+            const content = fs_1.default.readFileSync(contentFilePath, 'utf-8');
             const parsed = (0, front_matter_1.default)(content);
             let { title, date, permalink, externalUrl } = parsed.attributes;
             if (!date) {
-                date = (0, dayjs_1.default)().format("ddd, MMMM DD, YYYY");
+                date = (0, dayjs_1.default)().format('ddd, MMMM DD, YYYY');
             }
             else {
-                date = (0, dayjs_1.default)(date).format("ddd, MMMM DD, YYYY");
+                date = (0, dayjs_1.default)(date).format('ddd, MMMM DD, YYYY');
             }
             const postHtml = markdown_to_html_1.htmlConverter.makeHtml(parsed.body);
-            const fullFileName = (permalink || (0, slugify_1.default)(title).toLowerCase()).replace(/^\//, "");
-            const fullFileNameParts = fullFileName.replace(/\/$/, "").split("/");
-            const fileName = fullFileNameParts.pop() || "";
-            const nestedPostDir = fullFileNameParts.join("/");
+            const fullFileName = (permalink || (0, slugify_1.default)(title).toLowerCase()).replace(/^\//, '');
+            const fullFileNameParts = fullFileName.replace(/\/$/, '').split('/');
+            const fileName = fullFileNameParts.pop() || '';
+            const nestedPostDir = fullFileNameParts.join('/');
             if (nestedPostDir) {
                 fs_extra_1.default.ensureDirSync(path_1.default.join(outputDir, nestedPostDir));
             }
             const postMeta = {
                 title,
                 date,
-                permalink: path_1.default.join("/", nestedPostDir, fileName),
+                permalink: path_1.default.join('/', nestedPostDir, fileName),
                 externalUrl,
                 html: postHtml
             };
-            const postFileTemplate = path_1.default.join(themePath, "post.ejs");
+            const postFileTemplate = path_1.default.join(themePath, 'post.ejs');
             const populatedTemplate = yield ejs_1.default.renderFile(postFileTemplate, {
                 post: postMeta,
                 siteConfig
@@ -350,43 +356,43 @@ function prepareBlogPosts({ themePath, outputDir, siteConfig, postsDir }) {
 }
 function prepareAbout({ themePath, outputDir, siteConfig, repoPath }) {
     return __awaiter(this, void 0, void 0, function* () {
-        (0, core_1.info)("Preparing about page");
-        const aboutContent = fs_1.default.readFileSync(path_1.default.join(repoPath, "about.md"), "utf-8");
+        (0, core_1.info)('Preparing about page');
+        const aboutContent = fs_1.default.readFileSync(path_1.default.join(repoPath, 'about.md'), 'utf-8');
         const html = markdown_to_html_1.htmlConverter.makeHtml(aboutContent);
-        const populatedTemplate = yield ejs_1.default.renderFile(path_1.default.join(themePath, "about.ejs"), {
+        const populatedTemplate = yield ejs_1.default.renderFile(path_1.default.join(themePath, 'about.ejs'), {
             siteConfig,
             html
         });
-        fs_1.default.writeFileSync(path_1.default.join(outputDir, "about.html"), populatedTemplate);
+        fs_1.default.writeFileSync(path_1.default.join(outputDir, 'about.html'), populatedTemplate);
     });
 }
 function prepareStaticPages({ themePath, outputDir, siteConfig }) {
     return __awaiter(this, void 0, void 0, function* () {
-        (0, core_1.info)("Preparing 404 page");
-        const populatedTemplate = yield ejs_1.default.renderFile(path_1.default.join(themePath, "404.ejs"), { siteConfig });
-        fs_1.default.writeFileSync(path_1.default.join(outputDir, "404.html"), populatedTemplate);
+        (0, core_1.info)('Preparing 404 page');
+        const populatedTemplate = yield ejs_1.default.renderFile(path_1.default.join(themePath, '404.ejs'), { siteConfig });
+        fs_1.default.writeFileSync(path_1.default.join(outputDir, '404.html'), populatedTemplate);
     });
 }
 function prepareHome(posts, { themePath, outputDir, siteConfig }) {
     return __awaiter(this, void 0, void 0, function* () {
-        (0, core_1.info)("Preparing homepage");
+        (0, core_1.info)('Preparing homepage');
         posts.sort((a, b) => (0, dayjs_1.default)(b.date).date() - (0, dayjs_1.default)(a.date).date());
         const groupedPosts = posts.reduce((aggMap, postItem) => {
-            const year = (0, dayjs_1.default)(postItem.date).format("YYYY");
+            const year = (0, dayjs_1.default)(postItem.date).format('YYYY');
             aggMap.set(year, [...(aggMap.get(year) || []), postItem]);
             return aggMap;
         }, new Map());
-        const homeHtml = yield ejs_1.default.renderFile(path_1.default.join(themePath, "index.ejs"), {
+        const homeHtml = yield ejs_1.default.renderFile(path_1.default.join(themePath, 'index.ejs'), {
             siteConfig,
             groupedPosts
         });
-        fs_1.default.writeFileSync(path_1.default.join(outputDir, "index.html"), homeHtml);
+        fs_1.default.writeFileSync(path_1.default.join(outputDir, 'index.html'), homeHtml);
     });
 }
 function copyStaticAssets({ outputDir, repoPath }) {
     return __awaiter(this, void 0, void 0, function* () {
-        (0, core_1.info)("Copying static assets");
-        const staticAssetsPath = path_1.default.join(repoPath, "static");
+        (0, core_1.info)('Copying static assets');
+        const staticAssetsPath = path_1.default.join(repoPath, 'static');
         fs_extra_1.default.copySync(staticAssetsPath, outputDir);
     });
 }
