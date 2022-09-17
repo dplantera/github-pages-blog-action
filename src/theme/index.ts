@@ -54,9 +54,14 @@ export type SiteConfigType = {
 export async function prepareTheme(
   configuration: Pick<ConfigurationType, 'repoPath' | 'outputDir'> & { siteConfig?: SiteConfigType }
 ) {
+  info("Prepare Theme")
   const { outputDir, repoPath, siteConfig: _siteConfig } = configuration;
   const postsDir = path.join(repoPath, './posts');
   const themePath = path.join(__dirname, '../../theme');
+  info(`- __dirname: ${__dirname}`)
+  info(`- postsDir: ${postsDir}`)
+  info(`- themePath: ${themePath}`)
+
   const siteConfig: SiteConfigType =
     _siteConfig ?? require(path.join(configuration.repoPath, './site.json'));
 
@@ -80,6 +85,8 @@ type RootFileThemeConfig = FileThemeConfig & Pick<ConfigurationType, 'repoPath'>
 
 async function prepareThemeFiles({ themePath, outputDir, siteConfig }: FileThemeConfig) {
   info('Preparing theme files');
+  info(`- themePath: ${themePath}`);
+  info(`- outputDir: ${outputDir}`);
   const nonPageFiles = fs
     .readdirSync(themePath)
     .filter(file => !file.endsWith('.ejs') && !file.startsWith('_'));
