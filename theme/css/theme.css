@@ -411,7 +411,7 @@
 }
 
 .link-github:hover {
-    color: #333 !important
+    color: var(--text-color) !important
 }
 
 .link-medium:hover {
@@ -435,6 +435,13 @@
 }
 
 *, *:before, *:after {
+    --color-dark: #333;
+    --color-dark-2: #252525;
+    --color-white: #fff;
+    --color-white-2: #FAFAFA;
+    --bg-color: var(--color-dark);
+    --bg-color-2: var(--color-dark-2);
+    --text-color: var(--color-white);
     box-sizing: border-box;
     text-rendering: optimizeLegibility
 }
@@ -443,8 +450,9 @@ body {
     margin: auto;
     max-width: 80rem;
     padding: 1rem;
-    background-color: #fff;
-    color: #333;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    /*background-color: #fff;*/
     font-family: "Lato", -apple-system, Helvetica, Arial, sans-serif;
     font-size: 18px;
     line-height: 145%
@@ -487,14 +495,11 @@ hr::before {
 }
 
 blockquote {
-    margin: 3rem 0
-}
-
-blockquote p {
-    color: #0087F8;
-    font: 300 1.5rem "Lato", -apple-system, Helvetica, Arial, sans-serif;
-    line-height: 2rem;
-    text-align: center
+    background: var(--bg-color-2);
+    border-left: 10px solid #ccc;
+    margin: 1.5em 10px;
+    padding: 1em 10px .1em 10px;
+    quotes: "\201C""\201D""\2018""\2019";
 }
 
 img, video {
@@ -546,21 +551,21 @@ table {
 }
 
 table tbody tr:nth-child(odd) {
-    background-color: #fff
+    background-color: var(--bg-color)
 }
 
 table tbody tr:nth-child(even) {
-    background-color: #FAFAFA
+    background-color: var(--bg-color)
 }
 
 table th, table td {
     padding: 0.6rem 1rem 0.6rem 1rem;
-    color: #333
+    color: var(--text-color)
 }
 
 table th {
     font-weight: 600;
-    background: #fff;
+    background-color: var(--bg-color);
     border-left: 1px solid #E8E8E8
 }
 
@@ -608,7 +613,7 @@ footer {
 }
 
 .intro__head {
-    color: #333;
+    color: var(--text-color);
     font-size: 1.75rem;
     font-weight: 700;
 }
@@ -701,7 +706,7 @@ footer {
 }
 
 .feature--dark {
-    color: #333
+    color: var(--text-color)
 }
 
 .feature:first-child {
@@ -724,7 +729,7 @@ footer {
     width: 100%;
     font-family: "Lato", -apple-system, Helvetica, Arial, sans-serif;
     font-size: .95rem;
-    color: #333;
+    color: var(--text-color);
     text-decoration: none;
     transition: color .25s, padding-left .25s
 }
@@ -744,8 +749,8 @@ footer {
 }
 
 code {
-    background-color: #FAFAFA;
-    color: #333;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     font-family: "Roboto Mono", monospace;
     font-size: .75rem;
     font-style: normal;
@@ -781,7 +786,7 @@ pre .lineno {
     padding: .5rem 1rem 1rem;
     display: flex;
     flex-direction: column;
-    background-color: #FAFAFA
+    background-color: var(--bg-color)
 }
 
 #mc_embed_signup.twitter-signup {
@@ -809,7 +814,7 @@ pre .lineno {
 }
 
 .mc-title-container__main {
-    color: #333;
+    color: var(--text-color);
     font-size: .95rem;
     font-family: "Lato", -apple-system, Helvetica, Arial, sans-serif;
     font-weight: 700
@@ -827,7 +832,7 @@ pre .lineno {
 
 .mc-form__email {
     flex: 8;
-    color: #333;
+    color: var(--text-color);
     margin-right: 0;
     border: 1px solid #E8E8E8;
     border-top-left-radius: 3px;
@@ -852,8 +857,8 @@ pre .lineno {
 
 .mc-form__button {
     flex: 2;
-    background-color: #fff;
-    color: #333;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     margin-left: 0;
     border: 1px solid #E8E8E8;
     border-left-width: 0;
